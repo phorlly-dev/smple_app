@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/views/widgets/topbar.dart';
+import 'package:flutter/services.dart';
 
 class WeightCalculator extends StatefulWidget {
   const WeightCalculator({super.key});
@@ -11,11 +12,20 @@ class WeightCalculator extends StatefulWidget {
 class _WeightCalculatorState extends State<WeightCalculator> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
   double _bmi = 0.0;
+  String _gender = 'Male';
+  final List<String> _genderOptions = ['Male', 'Female', 'Other'];
 
   void _calculateBMI() {
     double weight = double.tryParse(_weightController.text) ?? 0.0;
     double height = double.tryParse(_heightController.text) ?? 0.0;
+    int age = int.tryParse(_ageController.text) ?? 0;
+
+    // Basic validation
+    if (age <= 0 || age > 120) {
+      // Handle invalid age input (e.g., show an error message)
+    }
 
     if (weight > 0 && height > 0) {
       setState(() {
@@ -43,7 +53,18 @@ class _WeightCalculatorState extends State<WeightCalculator> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
+                _buildGenderDropdown(),
+                 const SizedBox(height: 16),
               _buildInputField(
+                controller: _ageController,
+                label: 'Age',
+                keyboardType: TextInputType.number,
+                 inputFormatters: [FilteringTextInputFormatter.digitsOnly]
+                
+              ),
+              const SizedBox(height: 16),
+               _buildInputField(
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: _heightController,
                 label: 'Height (cm)',
                 keyboardType: TextInputType.number,
@@ -53,7 +74,9 @@ class _WeightCalculatorState extends State<WeightCalculator> {
                 onPressed: _calculateBMI,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 32, vertical: 16),
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
                 ),
                 child: const Text(
                   'Calculate BMI',
@@ -64,7 +87,9 @@ class _WeightCalculatorState extends State<WeightCalculator> {
               Text(
                 'Your BMI: ${_bmi.toStringAsFixed(2)}',
                 style: const TextStyle(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               _buildBMICategory(),
@@ -80,10 +105,12 @@ class _WeightCalculatorState extends State<WeightCalculator> {
     required TextEditingController controller,
     required String label,
     required TextInputType keyboardType,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
         labelText: label,
@@ -91,13 +118,35 @@ class _WeightCalculatorState extends State<WeightCalculator> {
     );
   }
 
+  Widget _buildGenderDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _gender,
+      items:
+          _genderOptions.map((String value) {
+            return DropdownMenuItem<String>(value: value, child: Text(value));
+          }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _gender = newValue!;
+        });
+      },
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+      labelText: 'Gender',
+
+      ),
+    );
+  }
+
   Widget _buildBMICategory() {
     if (_bmi == 0.0) return const SizedBox.shrink();
-    String category = _bmi < 18.5
-        ? 'Underweight'
-        : _bmi < 25 ? 'Normal weight' : 'Overweight';
+    String category =
+        _bmi < 18.5
+            ? 'Underweight'
+            : _bmi < 25
+            ? 'Normal weight'
+            : 'Overweight';
 
-    return Text('Category: $category',
-        style: const TextStyle(fontSize: 18));
+    return Text('Category: $category', style: const TextStyle(fontSize: 18));
   }
 }

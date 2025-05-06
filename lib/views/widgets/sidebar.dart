@@ -5,7 +5,7 @@ import 'package:smple_app/views/pages/music_player.dart';
 import 'package:smple_app/views/pages/simple_calendar.dart';
 import 'package:smple_app/views/pages/timer_stopwatch.dart';
 import 'package:smple_app/views/pages/user.dart';
-import 'package:smple_app/views/pages/weight_calulator.dart';
+import 'package:smple_app/views/pages/weight_calculator.dart';
 import 'package:smple_app/views/widgets/item.dart';
 
 class Siderbar extends StatefulWidget {
@@ -46,7 +46,7 @@ class _SiderbarState extends State<Siderbar> {
             Item(
               title: "Weight Calculator",
               tap: () {
-                NavLink.next(context, slug: WeightCalulator());
+                NavLink.next(context, slug: WeightCalculator());
               },
             ),
             Item(

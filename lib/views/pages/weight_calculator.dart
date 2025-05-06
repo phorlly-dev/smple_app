@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/views/widgets/topbar.dart';
+import 'package:flutter/services.dart';
 
 class WeightCalculator extends StatefulWidget {
   const WeightCalculator({super.key});
@@ -12,6 +13,8 @@ class _WeightCalculatorState extends State<WeightCalculator> {
   final _weight = TextEditingController();
   final _height = TextEditingController();
   double _bmi = 0.0;
+  String _gender = 'Male';
+  final List<String> _genderOptions = ['Male', 'Female', 'Other'];
 
   void _calculateBMI() {
     double weight = double.tryParse(_weight.text) ?? 0.0;
@@ -43,6 +46,8 @@ class _WeightCalculatorState extends State<WeightCalculator> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
+                _buildGenderDropdown(),
+                 const SizedBox(height: 16),
               _buildInputField(
                 controller: _height,
                 label: 'Height (cm)',
@@ -56,6 +61,9 @@ class _WeightCalculatorState extends State<WeightCalculator> {
                     horizontal: 32,
                     vertical: 16,
                   ),
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
                 ),
                 child: const Text(
                   'Calculate BMI',
@@ -66,6 +74,9 @@ class _WeightCalculatorState extends State<WeightCalculator> {
               Text(
                 'Your BMI: ${_bmi.toStringAsFixed(2)}',
                 style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -85,10 +96,12 @@ class _WeightCalculatorState extends State<WeightCalculator> {
     required TextEditingController controller,
     required String label,
     required TextInputType keyboardType,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         labelText: label,
@@ -96,8 +109,34 @@ class _WeightCalculatorState extends State<WeightCalculator> {
     );
   }
 
+  Widget _buildGenderDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _gender,
+      items:
+          _genderOptions.map((String value) {
+            return DropdownMenuItem<String>(value: value, child: Text(value));
+          }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _gender = newValue!;
+        });
+      },
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+      labelText: 'Gender',
+
+      ),
+    );
+  }
+
   Widget _buildBMICategory() {
     if (_bmi == 0.0) return const SizedBox.shrink();
+    String category =
+        _bmi < 18.5
+            ? 'Underweight'
+            : _bmi < 25
+            ? 'Normal weight'
+            : 'Overweight';
     String category =
         _bmi < 18.5
             ? 'Underweight'

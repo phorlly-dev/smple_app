@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:smple_app/views/pages/home.dart';
 
 //global object for accessing device screen size
 Size mq = Size.zero;
 var formKey = GlobalKey<FormState>();
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
+ 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

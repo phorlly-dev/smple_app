@@ -9,13 +9,13 @@ class WeightCalculator extends StatefulWidget {
 }
 
 class _WeightCalculatorState extends State<WeightCalculator> {
-  final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
+  final _weight = TextEditingController();
+  final _height = TextEditingController();
   double _bmi = 0.0;
 
   void _calculateBMI() {
-    double weight = double.tryParse(_weightController.text) ?? 0.0;
-    double height = double.tryParse(_heightController.text) ?? 0.0;
+    double weight = double.tryParse(_weight.text) ?? 0.0;
+    double height = double.tryParse(_height.text) ?? 0.0;
 
     if (weight > 0 && height > 0) {
       setState(() {
@@ -38,13 +38,13 @@ class _WeightCalculatorState extends State<WeightCalculator> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildInputField(
-                controller: _weightController,
+                controller: _weight,
                 label: 'Weight (kg)',
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16),
               _buildInputField(
-                controller: _heightController,
+                controller: _height,
                 label: 'Height (cm)',
                 keyboardType: TextInputType.number,
               ),
@@ -53,7 +53,9 @@ class _WeightCalculatorState extends State<WeightCalculator> {
                 onPressed: _calculateBMI,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 32, vertical: 16),
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
                 ),
                 child: const Text(
                   'Calculate BMI',
@@ -64,10 +66,13 @@ class _WeightCalculatorState extends State<WeightCalculator> {
               Text(
                 'Your BMI: ${_bmi.toStringAsFixed(2)}',
                 style: const TextStyle(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               _buildBMICategory(),
+              // getBMICategory(bmi: _bmi),
             ],
           ),
         ),
@@ -85,7 +90,7 @@ class _WeightCalculatorState extends State<WeightCalculator> {
       controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        border: const OutlineInputBorder(),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         labelText: label,
       ),
     );
@@ -93,11 +98,50 @@ class _WeightCalculatorState extends State<WeightCalculator> {
 
   Widget _buildBMICategory() {
     if (_bmi == 0.0) return const SizedBox.shrink();
-    String category = _bmi < 18.5
-        ? 'Underweight'
-        : _bmi < 25 ? 'Normal weight' : 'Overweight';
+    String category =
+        _bmi < 18.5
+            ? 'Underweight'
+            : _bmi < 25
+            ? 'Normal weight'
+            : 'Overweight';
 
-    return Text('Category: $category',
-        style: const TextStyle(fontSize: 18));
+    return Text('Category: $category', style: const TextStyle(fontSize: 18));
   }
+
+  // Widget getBMICategory({double bmi = .0}) {
+  //   var category = "No data";
+
+  //   // switch (bmi) {
+  //   //   case 0:
+  //   //     category = "No data";
+  //   //   case 16:
+  //   //     category = "Severely underweight";
+  //   //   case 17:
+  //   //     category = "Moderately underweight";
+  //   //   case 18.5:
+  //   //     category = "Mildly underweight";
+  //   //   case 25:
+  //   //     category = "Normal";
+  //   //   case 30:
+  //   //     category = "Overweight";
+  //   //   case 35:
+  //   //     category = "Obese Class I";
+  //   //   case 40:
+  //   //     category = "Obese Class II";
+  //   //   default:
+  //   //     category = "Obese Class III";
+  //   // }
+
+  //   if (bmi < 16) category = "Severely underweight";
+  //   if (bmi < 17) category = "Moderately underweight";
+  //   if (bmi < 18.5) category = "Mildly underweight";
+  //   if (bmi < 25) category = "Normal";
+  //   if (bmi < 30) category = "Overweight";
+  //   if (bmi < 35) category = "Obese Class I";
+  //   if (bmi < 40) category = "Obese Class II";
+
+  //   // category = "Obese Class III";
+
+  //   return Text('Category: $category', style: const TextStyle(fontSize: 18));
+  // }
 }

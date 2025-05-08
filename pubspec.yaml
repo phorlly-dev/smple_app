@@ -37,6 +37,11 @@ dependencies:
   uuid: ^4.5.1 # Add UUID package for unique IDs
   firebase_core: ^2.25.2
   cloud_firestore: ^4.15.5
+  intl: ^0.18.1
+  syncfusion_flutter_calendar: ^29.1.41
+  # flutter_local_notifications: ^16.3.0
+  # timezone: ^0.10.0
+ 
 
 dev_dependencies:
   flutter_test:

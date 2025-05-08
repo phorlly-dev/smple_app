@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/core/models/user.dart';
-import 'package:smple_app/views/widgets/simple.dart';
+import 'package:smple_app/views/widgets/sample.dart';
 import 'package:uuid/uuid.dart';
 
 class UserForm extends StatefulWidget {

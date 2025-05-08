@@ -9,6 +9,7 @@ var formKey = GlobalKey<FormState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // await NotificationService.init(); // Must be awaited
   runApp(const MyApp());
 }
 

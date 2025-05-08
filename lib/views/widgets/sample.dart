@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smple_app/main.dart';
 
 class Input extends StatelessWidget {
-  final String? initVal, hint;
+  final String? hint;
   final String label;
   final TextEditingController? name;
   final IconData? icon;
@@ -13,7 +13,6 @@ class Input extends StatelessWidget {
 
   const Input({
     super.key,
-    this.initVal,
     this.hint,
     required this.label,
     this.name,
@@ -27,7 +26,7 @@ class Input extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: TextFormField(
         controller: name,
         onSaved: saved,
@@ -35,14 +34,13 @@ class Input extends StatelessWidget {
         keyboardType: type,
         maxLines: null,
         onChanged: changed,
-        initialValue: initVal,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.blue),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           hintText: hint,
           label: Text(
             label,
-            style: TextStyle(color: Colors.blueAccent, fontSize: 16),
+            style: const TextStyle(color: Colors.blueAccent, fontSize: 16),
           ),
         ),
       ),
@@ -130,6 +128,34 @@ class ImageButton extends StatelessWidget {
       ),
       onPressed: click,
       child: Image.asset(imagePath),
+    );
+  }
+}
+
+class ActionButtons extends StatelessWidget {
+  final VoidCallback pressedOnEdit, pressedOnDelete;
+  const ActionButtons({
+    super.key,
+    required this.pressedOnEdit,
+    required this.pressedOnDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.edit),
+          color: Colors.green,
+          onPressed: pressedOnEdit,
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete),
+          color: Colors.redAccent,
+          onPressed: pressedOnDelete,
+        ),
+      ],
     );
   }
 }

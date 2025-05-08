@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/common/nav_link.dart';
 import 'package:smple_app/views/pages/calendar_note.dart';
+import 'package:smple_app/views/pages/full_calendar_event.dart';
 import 'package:smple_app/views/pages/music_player.dart';
 import 'package:smple_app/views/pages/simple_calendar.dart';
 import 'package:smple_app/views/pages/timer_stopwatch.dart';
-import 'package:smple_app/views/pages/user.dart';
+import 'package:smple_app/views/pages/user_list.dart';
 import 'package:smple_app/views/pages/weight_calculator.dart';
 import 'package:smple_app/views/widgets/item.dart';
 
@@ -40,37 +41,43 @@ class _SiderbarState extends State<Siderbar> {
             Item(
               title: "User List",
               tap: () {
-                NavLink.next(context, slug: UserPage(title: "User List"));
+                NavLink.next(context, widget: UserPage(title: "User List"));
               },
             ),
             Item(
               title: "Weight Calculator",
               tap: () {
-                NavLink.next(context, slug: WeightCalculator());
+                NavLink.next(context, widget: WeightCalculator());
+              },
+            ),
+            Item(
+              title: "Full Calendar",
+              tap: () {
+                NavLink.next(context, widget: CalendarViewPage());
               },
             ),
             Item(
               title: "Simple Calendar",
               tap: () {
-                NavLink.next(context, slug: SimpleCalendar());
+                NavLink.next(context, widget: SimpleCalendar());
               },
             ),
             Item(
               title: "Music Player UI",
               tap: () {
-                NavLink.next(context, slug: MusicPlayer());
+                NavLink.next(context, widget: MusicPlayer());
               },
             ),
             Item(
               title: "Timer / Stopwatch",
               tap: () {
-                NavLink.next(context, slug: TimerStopwatch());
+                NavLink.next(context, widget: TimerStopwatch());
               },
             ),
             Item(
               title: "Calendar Notes",
               tap: () {
-                NavLink.next(context, slug: CalendarNote());
+                NavLink.next(context, widget: CalendarNote());
               },
             ),
           ],

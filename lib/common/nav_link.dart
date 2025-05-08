@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class NavLink {
-  static next(BuildContext context, {required Widget slug}) {
-    return Navigator.push(context, MaterialPageRoute(builder: (_) => slug));
+  static next(BuildContext context, {required Widget widget}) {
+    return Navigator.push(context, MaterialPageRoute(builder: (_) => widget));
   }
 
-  static nextReplace(BuildContext context, {required Widget slug}) {
+  static nextReplace(BuildContext context, {required Widget widget}) {
     return Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => slug),
+      MaterialPageRoute(builder: (_) => widget),
     );
   }
 

@@ -146,7 +146,11 @@ class Global {
   static showModal(
     BuildContext context, {
     required String title,
-   required List<Widget> children,
+    model,
+    required List<Widget> children,
+    VoidCallback? onDelete,
+    VoidCallback? onSave,
+    VoidCallback? onUpdate,
   }) {
     showDialog(
       context: context,
@@ -154,10 +158,14 @@ class Global {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text(title, textAlign: TextAlign.center),
+              title: Text(
+                model == null ? 'Add New $title' : 'Edit The $title',
+                textAlign: TextAlign.center,
+              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: children,
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -166,47 +174,37 @@ class Global {
 
                 if (model != null)
                   TextButton(
-                    onPressed: () async {
-                      await remove(model.id);
+                    onPressed: () {
+                      onDelete?.call();
 
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                        refresh;
-                        Global.message(context, message: 'Meeting deleted');
-                      }
+                      Navigator.pop(context);
+                      Global.message(
+                        context,
+                        message: '$title deleted successfully!',
+                      );
                     },
                     child: Global.text('Delete', color: Colors.red),
                   ),
 
                 TextButton(
-                  onPressed: () async {
-                    if (title.text.isEmpty) {
+                  onPressed: () {
+                    if (model == null) {
+                      onSave?.call();
+
+                      Navigator.pop(context);
                       Global.message(
                         context,
-                        message: 'Title cannot be empty',
-                        bgColor: Colors.red,
+                        message: '$title created successfully!',
                       );
                     } else {
-                      final item = Meeting(
-                        id: model!.id,
-                        eventName: title.text,
-                        from: start,
-                        to: end,
-                        background: Colors.lightGreenAccent,
-                        isAllDay: isAllDay,
+                      onUpdate?.call();
+
+                      Navigator.pop(context);
+                      Global.message(
+                        context,
+                        message: '$title updated successfully!',
+                        bgColor: Colors.green,
                       );
-
-                      model.id.isEmpty ? await update(item) : await store(item);
-
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                        refresh;
-                        Global.message(
-                          context,
-                          message: 'Title cannot be empty',
-                          bgColor: Colors.red,
-                        );
-                      }
                     }
                   },
                   child: Global.text(

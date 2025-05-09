@@ -45,6 +45,7 @@ class MeetingService {
     DateTime end = model?.to ?? DateTime.now().add(const Duration(hours: 1));
     bool isAllDay = model?.isAllDay ?? false;
 
+    Global.showModal(context, title: 'Meeting', children: []);
     showDialog(
       context: context,
       builder: (context) {

@@ -28,6 +28,18 @@ class Meeting {
     );
   }
 
+  factory Meeting.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Meeting(
+      id: doc.id,
+      eventName: data['eventName'] ?? 'No Title',
+      from: (data['from'] as Timestamp).toDate(),
+      to: (data['to'] as Timestamp).toDate(),
+      background: Color(data['background']),
+      isAllDay: data['isAllDay'] ?? false,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'eventName': eventName,

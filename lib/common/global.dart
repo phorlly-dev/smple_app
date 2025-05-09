@@ -30,6 +30,8 @@ class Global {
         content: Text(message, textAlign: TextAlign.center),
         backgroundColor: bgColor,
         behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+        width: 200,
       ),
     );
   }
@@ -43,14 +45,17 @@ class Global {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Delete the: $message', textAlign: TextAlign.center),
+          title: Text('Confirm Delete!', textAlign: TextAlign.center),
           content: Text('Are you sure you want to delete:\n $message?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
+              child: Global.text('Cancel'),
             ),
-            TextButton(onPressed: confirmed, child: Text('Delete')),
+            TextButton(
+              onPressed: confirmed,
+              child: Global.text('Delete', color: Colors.red),
+            ),
           ],
         );
       },
@@ -143,7 +148,22 @@ class Global {
     );
   }
 
-  static showModal(
+  static showModal({
+    required BuildContext context,
+    required Widget Function(BuildContext context, StateSetter setState)
+    builder,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => builder(context, setState),
+        );
+      },
+    );
+  }
+
+  static form(
     BuildContext context, {
     required String title,
     model,
@@ -152,71 +172,36 @@ class Global {
     VoidCallback? onSave,
     VoidCallback? onUpdate,
   }) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(
-                model == null ? 'Add New $title' : 'Edit The $title',
-                textAlign: TextAlign.center,
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: children,
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Global.text('Cancel'),
-                ),
+    return AlertDialog(
+      title: Text(
+        model == null ? 'Add New $title' : 'Edit The $title',
+        textAlign: TextAlign.center,
+      ),
+      content: Column(mainAxisSize: MainAxisSize.min, children: children),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Global.text('Cancel'),
+        ),
 
-                if (model != null)
-                  TextButton(
-                    onPressed: () {
-                      onDelete?.call();
+        if (model != null && onDelete != null)
+          TextButton(
+            onPressed: () {
+              if (model.id.isNotEmpty) {
+                onDelete.call();
+              }
+            },
+            child: Global.text('Delete', color: Colors.red),
+          ),
 
-                      Navigator.pop(context);
-                      Global.message(
-                        context,
-                        message: '$title deleted successfully!',
-                      );
-                    },
-                    child: Global.text('Delete', color: Colors.red),
-                  ),
-
-                TextButton(
-                  onPressed: () {
-                    if (model == null) {
-                      onSave?.call();
-
-                      Navigator.pop(context);
-                      Global.message(
-                        context,
-                        message: '$title created successfully!',
-                      );
-                    } else {
-                      onUpdate?.call();
-
-                      Navigator.pop(context);
-                      Global.message(
-                        context,
-                        message: '$title updated successfully!',
-                        bgColor: Colors.green,
-                      );
-                    }
-                  },
-                  child: Global.text(
-                    model == null ? 'Save' : 'Update',
-                    color: model == null ? Colors.blue : Colors.green,
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
+        TextButton(
+          onPressed: () => model == null ? onSave?.call() : onUpdate?.call(),
+          child: Global.text(
+            model == null ? 'Save' : 'Update',
+            color: model == null ? Colors.blue : Colors.green,
+          ),
+        ),
+      ],
     );
   }
 }

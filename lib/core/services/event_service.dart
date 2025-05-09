@@ -98,163 +98,101 @@ class EventService {
     final description = TextEditingController(text: item?.description ?? '');
     DateTime selectedDate = item?.date ?? DateTime.now();
 
-    showDialog(
+    // Show the dialog
+    Global.showModal(
       context: context,
-      builder: (context) {
-        DateTime tempSelectedDate = selectedDate;
+      builder: (context, setState) {
+        return Global.form(
+          model: item,
+          context,
+          title: 'Event',
+          children: [
+            TextField(
+              controller: title,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            Global.showDateTimePicker(
+              context,
+              label: 'Datetime',
+              selected: selectedDate,
+              changed: (value) => setState(() => selectedDate = value),
+            ),
+            TextField(
+              maxLines: null,
+              minLines: 1,
+              keyboardType: TextInputType.multiline,
+              controller: description,
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                helperMaxLines: 5,
+              ),
+            ),
+          ],
 
-        return StatefulBuilder(
-          builder: (context, setState) {
-            // Function to pick date and time
-            Future<void> pickDateTime() async {
-              final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: tempSelectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2101),
+          // Save button
+          onSave: () async {
+            if (title.text.isEmpty) {
+              Global.message(
+                context,
+                message: 'Please enter a title',
+                bgColor: Colors.red,
               );
+              return;
+            } else {
+              final event = Event(
+                title: title.text,
+                date: selectedDate,
+                description: description.text,
+                id: '',
+              );
+              await store(event);
 
-              if (pickedDate != null && context.mounted) {
-                final TimeOfDay? pickedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.fromDateTime(tempSelectedDate),
-                );
+              // Schedule the notification
+              // NotificationService.scheduleNotification(
+              //   id: event.title.hashCode,
+              //   title: event.title,
+              //   body: event.description ?? '',
+              //   scheduledDate: event.date,
+              // );
 
-                if (pickedTime != null) {
-                  final DateTime combined = DateTime(
-                    pickedDate.year,
-                    pickedDate.month,
-                    pickedDate.day,
-                    pickedTime.hour,
-                    pickedTime.minute,
-                  );
+              title.clear();
+              description.clear();
 
-                  setState(() {
-                    tempSelectedDate = combined;
-                  });
-                }
+              if (context.mounted) {
+                Navigator.pop(context);
+                Global.message(context, message: 'Created successfully!');
               }
             }
+          },
 
-            // AlertDialog to show the form
-            return AlertDialog(
-              title: Text(
-                item == null ? 'Add Event' : 'Edit Event',
-                textAlign: TextAlign.center,
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: title,
-                    decoration: const InputDecoration(labelText: 'Title'),
-                  ),
-                  const SizedBox(height: 10),
-
-                  TextField(
-                    maxLines: null,
-                    minLines: 1,
-                    keyboardType: TextInputType.multiline,
-                    controller: description,
-                    decoration: const InputDecoration(
-                      labelText: 'Description',
-                      helperMaxLines: 5,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ListTile(
-                    title: Text('Datetime'),
-                    subtitle: Text(Global.dateTimeFormat(tempSelectedDate)),
-                    trailing: const Icon(Icons.calendar_today),
-                    onTap: pickDateTime,
-                  ),
-                ],
-              ),
-              actions: [
-                Button(
-                  click: () => Navigator.of(context).pop(),
-                  label: 'Cancel',
-                  icon: Icons.cancel,
-                  color: Colors.black,
+          // Update button
+          onUpdate: () async {
+            if (title.text.isEmpty) {
+              Global.message(
+                context,
+                message: 'Please enter a title',
+                bgColor: Colors.red,
+              );
+              return;
+            } else {
+              await update(
+                Event(
+                  id: item!.id, // assuming Event has an id field
+                  title: title.text,
+                  date: selectedDate,
+                  description: description.text,
                 ),
-                Button(
-                  click: () {
-                    // Save the event
-                    if (item == null) {
-                      if (title.text.isNotEmpty) {
-                        final event = Event(
-                          title: title.text,
-                          date: tempSelectedDate,
-                          description: description.text,
-                          id: '',
-                        );
-                        store(event);
+              );
 
-                        // Schedule the notification
-                        // NotificationService.scheduleNotification(
-                        //   id: event.title.hashCode,
-                        //   title: event.title,
-                        //   body: event.description ?? '',
-                        //   scheduledDate: event.date,
-                        // );
-
-                        title.clear();
-                        description.clear();
-                        setState(() {
-                          selectedDate = tempSelectedDate;
-                        });
-
-                        Navigator.pop(context);
-                        Global.message(
-                          context,
-                          message: 'Created successfully!',
-                        );
-                      } else {
-                        Global.message(
-                          context,
-                          message: 'Please enter an event title.',
-                          bgColor: Colors.red,
-                        );
-                      }
-                    } else {
-                      // Update existing event
-                      if (title.text.isNotEmpty) {
-                        update(
-                          Event(
-                            id: item.id, // assuming Event has an id field
-                            title: title.text,
-                            date: tempSelectedDate,
-                            description: description.text,
-                          ),
-                        );
-
-                        title.clear();
-                        description.clear();
-                        setState(() {
-                          selectedDate = tempSelectedDate;
-                        });
-
-                        Navigator.pop(context);
-                        Global.message(
-                          context,
-                          message: 'Udpated successfully!',
-                          bgColor: Colors.green,
-                        );
-                      } else {
-                        Global.message(
-                          context,
-                          message: 'Please enter an event title.',
-                          bgColor: Colors.red,
-                        );
-                      }
-                    }
-                  },
-                  color: item == null ? Colors.blueAccent : Colors.green,
-                  label: item == null ? 'Save' : 'Update',
-                  icon: item == null ? Icons.save : Icons.update,
-                ),
-              ],
-            );
+              if (context.mounted) {
+                Navigator.pop(context);
+                Global.message(
+                  context,
+                  message: 'Updated successfully!',
+                  bgColor: Colors.green,
+                );
+              }
+            }
           },
         );
       },

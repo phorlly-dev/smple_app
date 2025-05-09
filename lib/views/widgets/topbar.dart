@@ -35,7 +35,7 @@ class _TopbarState extends State<Topbar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: Text(widget.title)),
-      body: widget.content,
+      body: Container(padding: const EdgeInsets.all(12), child: widget.content),
       floatingActionButton: widget.button,
       // bottomNavigationBar: BottomNavigationBar(
       //   items: [

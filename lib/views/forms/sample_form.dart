@@ -28,7 +28,7 @@ class FormBuilder {
         return AlertDialog(
           alignment: Alignment.center,
           title: Text(
-            item == null ? 'Add $title' : 'Edit $title',
+            item == null ? 'Add New $title' : 'Edit The $title',
             textAlign: TextAlign.center,
           ),
           content: Form(
@@ -77,14 +77,14 @@ class FormBuilder {
                       // If item is null, it's an add operation
                       Global.message(
                         context,
-                        message: '$title added successfully!',
+                        message: 'Created successfully!',
                         bgColor: Colors.blue,
                       );
                     } else {
                       // If item is not null, it's an edit operation
                       Global.message(
                         context,
-                        message: '$title updated successfully!',
+                        message: 'Updated successfully!',
                         bgColor: Colors.green,
                       );
                     }

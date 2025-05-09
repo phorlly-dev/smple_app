@@ -34,18 +34,6 @@ class Global {
     );
   }
 
-  static Widget loading() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  static Widget error(String message) {
-    return Center(child: Text(message, style: TextStyle(color: Colors.red)));
-  }
-
-  static Widget empty(String message) {
-    return Center(child: Text(message, style: TextStyle(color: Colors.grey)));
-  }
-
   static confirmDelete(
     BuildContext context, {
     required String message,
@@ -116,5 +104,121 @@ class Global {
 
   static dateTimeFormat(DateTime dateTime) {
     return DateFormat('dd/MM/yyyy, hh:mm a').format(dateTime);
+  }
+
+  static Widget showDateTimePicker(
+    BuildContext context, {
+    required String label,
+    required DateTime selected,
+    required ValueChanged<DateTime> changed,
+  }) {
+    return ListTile(
+      title: Text(label),
+      subtitle: Text(dateTimeFormat(selected)),
+      trailing: const Icon(Icons.date_range),
+      onTap: () async {
+        final date = await showDatePicker(
+          context: context,
+          initialDate: selected,
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
+        );
+        if (date != null && context.mounted) {
+          final time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(selected),
+          );
+          if (time != null) {
+            final newDateTime = DateTime(
+              date.year,
+              date.month,
+              date.day,
+              time.hour,
+              time.minute,
+            );
+            changed(newDateTime);
+          }
+        }
+      },
+    );
+  }
+
+  static showModal(
+    BuildContext context, {
+    required String title,
+   required List<Widget> children,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(title, textAlign: TextAlign.center),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Global.text('Cancel'),
+                ),
+
+                if (model != null)
+                  TextButton(
+                    onPressed: () async {
+                      await remove(model.id);
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        refresh;
+                        Global.message(context, message: 'Meeting deleted');
+                      }
+                    },
+                    child: Global.text('Delete', color: Colors.red),
+                  ),
+
+                TextButton(
+                  onPressed: () async {
+                    if (title.text.isEmpty) {
+                      Global.message(
+                        context,
+                        message: 'Title cannot be empty',
+                        bgColor: Colors.red,
+                      );
+                    } else {
+                      final item = Meeting(
+                        id: model!.id,
+                        eventName: title.text,
+                        from: start,
+                        to: end,
+                        background: Colors.lightGreenAccent,
+                        isAllDay: isAllDay,
+                      );
+
+                      model.id.isEmpty ? await update(item) : await store(item);
+
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        refresh;
+                        Global.message(
+                          context,
+                          message: 'Title cannot be empty',
+                          bgColor: Colors.red,
+                        );
+                      }
+                    }
+                  },
+                  child: Global.text(
+                    model == null ? 'Save' : 'Update',
+                    color: model == null ? Colors.blue : Colors.green,
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }

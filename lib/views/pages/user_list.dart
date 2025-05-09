@@ -27,7 +27,7 @@ class _UserPageState extends State<UserPage> {
                 'Users',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Expanded(child: _userService.userStreamBuilder(context)),
+              Expanded(child: _userService.liveStream(context)),
             ],
           ),
         ),

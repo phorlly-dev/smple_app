@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smple_app/common/global.dart';
 import 'package:smple_app/core/models/event.dart';
-import 'package:smple_app/core/models/meeting.dart';
 import 'package:smple_app/core/services/service.dart';
 import 'package:smple_app/views/widgets/sample.dart';
 
@@ -39,11 +37,11 @@ class EventService {
 
   // Delete an User by its ID
   Future<void> remove(String id) async {
-    await Service.delete(collectionName: 'users', docId: id);
+    await Service.delete(collectionName: 'events', docId: id);
   }
 
   //Stream builder for reuseable widget
-  eventStreamBuilder(BuildContext context) {
+  liveStream(BuildContext context) {
     return Service.streamBuilder<Event>(
       collectionName: 'events',
       fromMap: (data, docId) => Event.fromMap(data, docId),
@@ -261,28 +259,5 @@ class EventService {
         );
       },
     );
-  }
-}
-
-class MeetingService {
-  final _collection = FirebaseFirestore.instance.collection('meetings');
-
-  Future<List<Meeting>> getMeetings() async {
-    final snapshot = await _collection.get();
-    return snapshot.docs.map((doc) => Meeting.fromMap(doc)).toList();
-  }
-
-  Future<void> addMeeting(Meeting meeting) async {
-    await _collection.add(meeting.toMap());
-  }
-
-  Future<void> updateMeeting(Meeting meeting) async {
-    if (meeting.id != null) {
-      await _collection.doc(meeting.id).update(meeting.toMap());
-    }
-  }
-
-  Future<void> deleteMeeting(String id) async {
-    await _collection.doc(id).delete();
   }
 }

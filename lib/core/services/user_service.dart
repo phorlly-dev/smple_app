@@ -39,7 +39,7 @@ class UserService {
   // }
 
   // Stream builder for reusable widget
-  userStreamBuilder(BuildContext context) {
+  liveStream(BuildContext context) {
     return Service.streamBuilder<User>(
       collectionName: 'users',
       fromMap: (data, docId) => User.fromMap(data, docId),
@@ -90,9 +90,9 @@ class UserService {
       item: item?.toMap(), // or pass item for editing
       listInputs: [
         {
-          'label': 'Name',
+          'label': 'Full Name',
           'name': 'name',
-          'hint': 'Enter your name',
+          'hint': 'Enter your full name',
           'type': TextInputType.name,
           'icon': Icons.person,
         },

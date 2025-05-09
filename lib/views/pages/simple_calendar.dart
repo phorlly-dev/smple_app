@@ -28,7 +28,7 @@ class _SimpleCalendarState extends State<SimpleCalendar> {
                 'Events',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Expanded(child: _eventService.eventStreamBuilder(context)),
+              Expanded(child: _eventService.liveStream(context)),
             ],
           ),
         ),

@@ -96,6 +96,7 @@ class FormBuilder {
                 },
                 label: item == null ? 'Save' : 'Update',
                 icon: item == null ? Icons.save : Icons.update,
+                color: item == null ? Colors.blue : Colors.green,
               ),
             ),
           ],

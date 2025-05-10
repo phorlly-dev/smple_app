@@ -51,15 +51,15 @@ class _SiderbarState extends State<Siderbar> {
               },
             ),
             Item(
-              title: "Full Calendar",
-              tap: () {
-                NavLink.next(context, widget: CalendarViewPage());
-              },
-            ),
-            Item(
               title: "Simple Calendar",
               tap: () {
                 NavLink.next(context, widget: SimpleCalendar());
+              },
+            ),
+            Item(
+              title: "Full Calendar",
+              tap: () {
+                NavLink.next(context, widget: CalendarViewPage());
               },
             ),
             Item(

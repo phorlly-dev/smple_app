@@ -7,6 +7,8 @@ class Meeting {
   DateTime to;
   Color background;
   bool isAllDay;
+  bool alertNotification;
+  DateTime? alertTime;
 
   Meeting({
     required this.id,
@@ -15,6 +17,8 @@ class Meeting {
     required this.to,
     required this.background,
     this.isAllDay = false,
+    this.alertNotification = false,
+    this.alertTime,
   });
 
   factory Meeting.fromMap(Map<String, dynamic> data, String docId) {
@@ -25,6 +29,8 @@ class Meeting {
       to: (data['to'] as Timestamp).toDate(),
       background: Color(data['background']),
       isAllDay: data['isAllDay'] ?? false,
+      alertNotification: data['alertNotification'] ?? false,
+      alertTime: (data['alertTime'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -37,6 +43,8 @@ class Meeting {
       to: (data['to'] as Timestamp).toDate(),
       background: Color(data['background']),
       isAllDay: data['isAllDay'] ?? false,
+      alertNotification: data['alertNotification'] ?? false,
+      alertTime: (data['alertTime'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -47,6 +55,58 @@ class Meeting {
       'to': to,
       'background': background.toARGB32(),
       'isAllDay': isAllDay,
+      'alertNotification': alertNotification,
+      'alertTime': alertTime,
     };
   }
 }
+
+// class Meeting {
+//   String id, eventName;
+//   DateTime from;
+//   DateTime to;
+//   Color background;
+//   bool isAllDay;
+
+//   Meeting({
+//     required this.id,
+//     required this.eventName,
+//     required this.from,
+//     required this.to,
+//     required this.background,
+//     this.isAllDay = false,
+//   });
+
+//   factory Meeting.fromMap(Map<String, dynamic> data, String docId) {
+//     return Meeting(
+//       id: docId,
+//       eventName: data['eventName'] ?? 'No Title',
+//       from: (data['from'] as Timestamp).toDate(),
+//       to: (data['to'] as Timestamp).toDate(),
+//       background: Color(data['background']),
+//       isAllDay: data['isAllDay'] ?? false,
+//     );
+//   }
+
+//   factory Meeting.fromFirestore(DocumentSnapshot doc) {
+//     final data = doc.data() as Map<String, dynamic>;
+//     return Meeting(
+//       id: doc.id,
+//       eventName: data['eventName'] ?? 'No Title',
+//       from: (data['from'] as Timestamp).toDate(),
+//       to: (data['to'] as Timestamp).toDate(),
+//       background: Color(data['background']),
+//       isAllDay: data['isAllDay'] ?? false,
+//     );
+//   }
+
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'eventName': eventName,
+//       'from': from,
+//       'to': to,
+//       'background': background.toARGB32(),
+//       'isAllDay': isAllDay,
+//     };
+//   }
+// }

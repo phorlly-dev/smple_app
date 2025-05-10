@@ -11,18 +11,6 @@ class CalendarViewPage extends StatefulWidget {
 
 class _CalendarViewPageState extends State<CalendarViewPage> {
   final _service = MeetingService();
-  // List<Meeting> meetings = [];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadData();
-  // }
-
-  // Future<void> loadData() async {
-  //   final fetched = await _service.index();
-  //   setState(() => meetings = fetched);
-  // }
 
   @override
   Widget build(BuildContext context) {

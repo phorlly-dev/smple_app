@@ -1,21 +1,13 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smple_app/common/global.dart';
 import 'package:smple_app/common/meeting_data_source.dart';
 import 'package:smple_app/core/models/meeting.dart';
+import 'package:smple_app/core/services/notification_service.dart';
 import 'package:smple_app/core/services/service.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class MeetingService {
-  final collection = FirebaseFirestore.instance.collection('meetings');
-
-  Future<List<Meeting>> index() async {
-    final snapshot = await collection.get();
-
-    return snapshot.docs.map((doc) => Meeting.fromFirestore(doc)).toList();
-  }
+  final notification = NotificationService();
 
   // Fetch all meetings from Firestore
   // Future<List<Meeting>> index() async {
@@ -32,8 +24,17 @@ class MeetingService {
     await Service.create<Meeting>(
       model: object,
       collectionName: 'meetings',
-      toMap: (event) => event.toMap(),
+      toMap: (value) => value.toMap(),
     );
+
+    // Schedule notification if alertNotification is true and alertTime is not null
+    if (object.alertNotification && object.alertTime != null) {
+      await notification.scheduleNotification(
+        id: object.id,
+        title: object.eventName,
+        scheduledTime: object.alertTime!,
+      );
+    }
   }
 
   // Fetch a single meeting by its ID
@@ -44,21 +45,33 @@ class MeetingService {
       docId: object.id,
       toMap: object.toMap(),
     );
+
+    // Schedule notification if alertNotification is true and alertTime is not null
+    if (object.alertNotification && object.alertTime != null) {
+      await notification.scheduleNotification(
+        id: object.id,
+        title: object.eventName,
+        scheduledTime: object.alertTime!,
+      );
+    } else {
+      // If alertNotification is false or alertTime is null, cancel any existing notification for this meeting
+      await notification.cancelNotification(object.id);
+    }
   }
 
   // Delete a meeting by its ID
   Future<void> remove(String id) async {
     await Service.delete(collectionName: 'meetings', docId: id);
+
+    // Cancel notification when a meeting is deleted
+    await notification.cancelNotification(id);
   }
 
   // Stream builder for reusable widget
   liveStream(BuildContext context) {
     return Service.streamBuilder<Meeting>(
       collectionName: 'meetings',
-      fromMap: (data, docId) {
-        log('Meeting data: $data');
-        return Meeting.fromMap(data, docId);
-      },
+      fromMap: (data, docId) => Meeting.fromMap(data, docId),
       builder: (context, data) {
         return SfCalendar(
           view: CalendarView.month,
@@ -68,6 +81,10 @@ class MeetingService {
             CalendarView.month,
             CalendarView.schedule,
           ],
+          firstDayOfWeek: 1,
+          showTodayButton: true,
+          allowViewNavigation: true,
+          // showWeekNumber: true,
           dataSource: MeetingDataSource(data),
           monthViewSettings: MonthViewSettings(showAgenda: true),
           onTap: (details) {
@@ -88,6 +105,9 @@ class MeetingService {
     DateTime start = model?.from ?? DateTime.now();
     DateTime end = model?.to ?? DateTime.now().add(const Duration(hours: 1));
     bool isAllDay = model?.isAllDay ?? false;
+    bool alertNotification =
+        model?.alertNotification ?? false; // Get alertNotification state
+    DateTime? alertTime = model?.alertTime; // Get alertTime
 
     // Show the dialog
     Global.showModal(
@@ -121,6 +141,28 @@ class MeetingService {
               onChanged: (value) => setState(() => isAllDay = value ?? false),
               title: const Text('All Day'),
             ),
+            CheckboxListTile(
+              // Add checkbox for alert notification
+              value: alertNotification,
+              onChanged:
+                  (value) => setState(() {
+                    alertNotification = value ?? false;
+                    if (!alertNotification) {
+                      alertTime =
+                          null; // Clear alertTime if alertNotification is false
+                    }
+                  }),
+              title: const Text('Enable Notification'),
+            ),
+            if (alertNotification) // Show time picker only if alertNotification is true
+              Global.showDateTimePicker(
+                context,
+                label: 'Alert Time',
+                selected:
+                    alertTime ??
+                    DateTime.now(), // Use current time if alertTime is null
+                changed: (value) => setState(() => alertTime = value),
+              ),
           ],
 
           // Delete button
@@ -163,6 +205,9 @@ class MeetingService {
                   to: end,
                   background: Colors.green,
                   isAllDay: isAllDay,
+                  alertNotification:
+                      alertNotification, // Save alertNotification state
+                  alertTime: alertTime, // Save alertTime
                 ),
               );
 
@@ -191,6 +236,9 @@ class MeetingService {
                   to: end,
                   background: Colors.green,
                   isAllDay: isAllDay,
+                  alertNotification:
+                      alertNotification, // Save alertNotification state
+                  alertTime: alertTime, // Save alertTime
                 ),
               );
 

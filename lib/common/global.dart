@@ -118,7 +118,7 @@ class Global {
     required ValueChanged<DateTime> changed,
   }) {
     return ListTile(
-      title: Text(label),
+      title: Text(label, textAlign: TextAlign.start),
       subtitle: Text(dateTimeFormat(selected)),
       trailing: const Icon(Icons.date_range),
       onTap: () async {
@@ -177,7 +177,9 @@ class Global {
         model == null ? 'Add New $title' : 'Edit The $title',
         textAlign: TextAlign.center,
       ),
-      content: Column(mainAxisSize: MainAxisSize.min, children: children),
+      content: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: children),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
@@ -203,5 +205,13 @@ class Global {
         ),
       ],
     );
+  }
+
+  static bool isSameMinute(DateTime a, DateTime b) {
+    return a.year == b.year &&
+        a.month == b.month &&
+        a.day == b.day &&
+        a.hour == b.hour &&
+        a.minute == b.minute;
   }
 }

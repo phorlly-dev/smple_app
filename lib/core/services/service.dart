@@ -1,4 +1,3 @@
-// lib/services/firestore_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -81,6 +80,7 @@ class Service {
     return StreamBuilder<List<T>>(
       stream: streamAll(collectionName: collectionName, fromMap: fromMap),
       builder: (context, snapshot) {
+        // log('snapshot: ${snapshot.data}');
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {

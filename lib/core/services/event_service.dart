@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/common/global.dart';
 import 'package:smple_app/core/models/event.dart';
+import 'package:smple_app/core/services/notification_service.dart';
 import 'package:smple_app/core/services/service.dart';
 import 'package:smple_app/views/widgets/sample.dart';
 
 class EventService {
+  final notification = NotificationService();
+
   // Add a new event
   Future<void> store(Event object) async {
     await Service.create<Event>(
@@ -51,18 +54,10 @@ class EventService {
           itemBuilder: (context, index) {
             final item = data[index];
 
-            // Schedule notification
-            // NotificationService.scheduleNotification(
-            //   id: item.id.hashCode,
-            //   title: item.title,
-            //   body: '${item.description}',
-            //   scheduledDate: item.date,
-            // );
-
             return ListTile(
               title: Text(item.title),
               subtitle: Text(
-                '${Global.dateTimeFormat(item.date.toLocal())}\n ${item.description ?? ''}',
+                '${Global.dateTimeFormat(item.date)}\n ${item.description ?? ''}',
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               trailing: ActionButtons(

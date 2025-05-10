@@ -107,12 +107,13 @@ class UserService {
           'label': 'Phone Number',
           'name': 'phone',
           'hint': 'Enter phone number',
-          'type': TextInputType.text,
+          'type': TextInputType.phone,
           'icon': Icons.phone,
         },
       ],
       submit: (object) async {
-        item == null
+        // log('object: $object');
+        item!.id.isEmpty
             ? await store(
               User(
                 id: '',

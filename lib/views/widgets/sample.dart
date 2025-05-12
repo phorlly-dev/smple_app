@@ -63,11 +63,21 @@ class ImageFile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(mq.height * hb),
-      child: Image.file(
-        File(image),
-        width: mq.height * wh,
-        height: mq.height * wh,
-        fit: BoxFit.cover,
+      child: Card(
+        child:
+            image != ''
+                ? Image.file(
+                  width: mq.height * wh,
+                  File(image),
+                  height: mq.height * wh,
+                  fit: BoxFit.cover,
+                )
+                : Container(
+                  width: 60,
+                  height: 60,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.image),
+                ),
       ),
     );
   }

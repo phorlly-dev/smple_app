@@ -72,7 +72,7 @@ class Button {
     required VoidCallback pressed,
     IconData icon = Icons.add,
     Color color = Colors.black,
-    double width = 40,
+    double width = 25,
     // double border = 10.0,
   }) {
     return IconButton(
@@ -80,6 +80,7 @@ class Button {
       icon: Icon(icon),
       color: color,
       iconSize: width,
+      style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.teal)),
       // padding: EdgeInsets.all(border),
     );
   }

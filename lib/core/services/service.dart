@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class Service {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //for upload image files
 
   /// Create (Add) a new document with auto ID
   static Future<String> create<T>({

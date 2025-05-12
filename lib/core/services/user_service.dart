@@ -6,16 +6,16 @@ import 'package:smple_app/views/forms/sample_form.dart';
 import 'package:smple_app/views/widgets/sample.dart';
 
 class UserService {
-  // Add a new event
+  // Add a new
   Future<void> store(User object) async {
     await Service.create<User>(
       model: object,
       collectionName: 'users',
-      toMap: (user) => user.toMap(),
+      toMap: (value) => value.toMap(),
     );
   }
 
-  // Update an existing User
+  // Update an existing
   Future<void> update(User object) async {
     // Update the user in Firestore
     await Service.update(

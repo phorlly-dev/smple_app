@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/views/widgets/topbar.dart';
 import 'package:flutter/services.dart';
+import 'package:smple_app/common/general.dart';
 
 class WeightCalculator extends StatefulWidget {
   const WeightCalculator({super.key});

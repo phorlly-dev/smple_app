@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smple_app/common/general.dart';
 import 'package:smple_app/core/services/user_service.dart';
-import 'package:smple_app/views/widgets/topbar.dart';
 
 class UserPage extends StatefulWidget {
   final String title;

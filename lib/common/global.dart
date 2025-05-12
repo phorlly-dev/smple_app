@@ -1,11 +1,22 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:smple_app/common/nav_link.dart';
+import 'package:smple_app/core/constants/constants.dart';
 import 'package:smple_app/views/pages/home.dart';
 import 'package:smple_app/views/pages/user_list.dart';
 import 'package:smple_app/views/pages/weight_calculator.dart';
 
 class Global {
+  static final formKey = GlobalKey<FormState>();
+  static final picker = ImagePicker();
+
+  //image path
+  static var imagePath = "";
+
   static Widget text(
     String title, {
     double size = 14,
@@ -177,8 +188,11 @@ class Global {
         model == null ? 'Add New $title' : 'Edit The $title',
         textAlign: TextAlign.center,
       ),
-      content: SingleChildScrollView(
-        child: Column(mainAxisSize: MainAxisSize.min, children: children),
+      content: Form(
+        key: Global.formKey,
+        child: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min, children: children),
+        ),
       ),
       actions: [
         TextButton(
@@ -197,7 +211,11 @@ class Global {
           ),
 
         TextButton(
-          onPressed: () => model == null ? onSave?.call() : onUpdate?.call(),
+          onPressed: () {
+            if (Global.formKey.currentState!.validate()) {
+              model == null ? onSave?.call() : onUpdate?.call();
+            }
+          },
           child: Global.text(
             model == null ? 'Save' : 'Update',
             color: model == null ? Colors.blue : Colors.green,
@@ -213,5 +231,74 @@ class Global {
         a.day == b.day &&
         a.hour == b.hour &&
         a.minute == b.minute;
+  }
+
+  static String getRandomImage() {
+    return AppImages.imageList[Random().nextInt(13)]!;
+  }
+
+  static Future<Object> requestPermission() async {
+    var status1 = await Permission.audio.status;
+    if (status1.isGranted) {
+      return true;
+    } else {
+      await [
+        Permission.storage,
+        Permission.audio,
+        Permission.manageExternalStorage,
+      ].request();
+
+      var temp1 = await Permission.audio.status;
+      if (temp1.isGranted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  static String getGreetingMessage() {
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Good morning';
+    } else if (hour >= 12 && hour < 18) {
+      return 'Good afternoon';
+    } else {
+      return 'Good evening';
+    }
+  }
+
+  static showBottomSheet({
+    required BuildContext context,
+    required Widget widget,
+    bool isDismissible = false,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: backgroundColor,
+      isDismissible: isDismissible,
+      enableDrag: false,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return widget;
+      },
+    );
+  }
+
+  //for choosing the file to upload
+  static Future<String> showFile({isGallery = true}) async {
+    // Pick an image.
+    final image = await picker.pickImage(
+      source: isGallery ? ImageSource.gallery : ImageSource.camera,
+      imageQuality: 70,
+    );
+
+    if (image != null) {
+      // print("Image path: ${image.path} --MimeType: ${image.mimeType}");
+      imagePath = image.path;
+    }
+
+    return imagePath;
   }
 }

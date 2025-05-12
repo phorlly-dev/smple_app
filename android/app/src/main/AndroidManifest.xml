@@ -2,8 +2,10 @@
     package="com.example.smple_app">
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
-        android:label="smple_app"
+        android:label="SimpleApp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

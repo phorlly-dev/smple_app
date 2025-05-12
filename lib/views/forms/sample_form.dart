@@ -10,7 +10,6 @@ class FormBuilder {
     required List<Map<String, dynamic>> listInputs,
     required Function(Map<String, dynamic> newData) submit,
   }) {
-    final formKey = GlobalKey<FormState>();
     final Map<String, TextEditingController> controllers = {};
 
     // Initialize controllers with item values or empty
@@ -32,7 +31,7 @@ class FormBuilder {
             textAlign: TextAlign.center,
           ),
           content: Form(
-            key: formKey,
+            key: Global.formKey,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -65,7 +64,7 @@ class FormBuilder {
             Center(
               child: Button(
                 click: () {
-                  if (formKey.currentState!.validate()) {
+                  if (Global.formKey.currentState!.validate()) {
                     final newData = <String, dynamic>{};
 
                     // Extract values from all controllers

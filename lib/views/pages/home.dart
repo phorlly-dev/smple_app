@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/views/widgets/sidebar.dart';
+import 'package:smple_app/common/general.dart';
 
 class HomePage extends StatelessWidget {
   final String title;
@@ -10,11 +10,9 @@ class HomePage extends StatelessWidget {
     return SafeArea(
       child: Siderbar(
         title: title,
-        content: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [const Text("Home Page"), const SizedBox(height: 20)],
-          ),
+        content: Card(
+          margin: EdgeInsets.only(top: 70, left: 12, right: 12),
+          child: Image(image: AssetImage('assets/images/14.jpg')),
         ),
         // button: Button.icon(
         //   icon: Icons.add,

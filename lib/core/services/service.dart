@@ -1,8 +1,15 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Service {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // var result = FilePicker.platform.pickFiles();
   //for upload image files
 
   /// Create (Add) a new document with auto ID
@@ -93,5 +100,124 @@ class Service {
         }
       },
     );
+  }
+
+  static Future<String> localPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  static Future<void> writeFile(String fileName, String content) async {
+    final path = await localPath();
+    final file = File('$path/$fileName');
+
+    await file.writeAsString(content);
+
+    log('The file: $file');
+  }
+
+  static Future<String> readFile(String fileName) async {
+    try {
+      final path = await localPath();
+      final file = File('$path/$fileName');
+
+      return await file.readAsString();
+    } catch (e) {
+      return 'Error reading file: $e';
+    }
+  }
+
+  static Future<String> imagePickup({isCamera = true}) async {
+    String path = '';
+    final ImagePicker picker = ImagePicker();
+
+    try {
+      final pickedFile = await picker.pickImage(
+        source: isCamera ? ImageSource.camera : ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        path = pickedFile.path;
+
+        return path;
+      } else {
+        return 'No image selected: $path';
+      }
+    } catch (e) {
+      return 'Error reading file: $e';
+    }
+  }
+
+  static Future<void> storeFile(
+    String folderName,
+    String fileName,
+    String content,
+  ) async {
+    final directory =
+        await getApplicationDocumentsDirectory(); // or getTemporaryDirectory()
+    final folderPath = '${directory.path}/$folderName';
+
+    // Create the folder if it doesn't exist
+    final folder = Directory(folderPath);
+    if (!(await folder.exists())) {
+      await folder.create(recursive: true);
+    }
+
+    final file = File('$folderPath/$fileName');
+    await file.writeAsString(content);
+
+    log('File written to: ${file.path}');
+  }
+
+  static Future<void> copyFromCacheToAppFolder(String fullCachePath) async {
+    final cacheFile = File(fullCachePath);
+
+    if (await cacheFile.exists()) {
+      final appDocDir = await localPath();
+
+      final folder = Directory('$appDocDir/assets/images');
+
+      if (!await folder.exists()) {
+        await folder.create(recursive: true);
+      }
+
+      final fileName = p.basename(fullCachePath); // Extract just the filename
+      final newPath = '${folder.path}/$fileName';
+
+      await cacheFile.copy(newPath);
+      log('File copied to: $newPath');
+    } else {
+      log('File does not exist at: $fullCachePath');
+    }
+  }
+
+  static Future<void> addFileToFolder(
+    String sourceFilePath,
+    String folderName,
+  ) async {
+    final sourceFile = File(sourceFilePath);
+
+    if (await sourceFile.exists()) {
+      // Get app documents directory
+      final appDir = await localPath();
+      final targetFolder = Directory('$appDir/$folderName');
+
+      // Create folder if it doesn't exist
+      if (!await targetFolder.exists()) {
+        await targetFolder.create(recursive: true);
+      }
+
+      // Get just the file name
+      final fileName = p.basename(sourceFilePath);
+
+      // Destination file path
+      final destinationPath = '${targetFolder.path}/$fileName';
+      await sourceFile.copy(destinationPath);
+
+      log('File added to folder: $destinationPath');
+    } else {
+      log('Source file does not exist: $sourceFilePath');
+    }
   }
 }

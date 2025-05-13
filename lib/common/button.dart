@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // All button widget that can be used in the app.
-class Button {
+class Buttons {
   static ElevatedButton elevated({
     required VoidCallback pressed,
     String text = "Add New",

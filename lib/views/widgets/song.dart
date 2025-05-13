@@ -10,7 +10,9 @@ class MySong extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.only(top: 20, left: 12, right: 12),
-      child: Expanded(child: service.liveStream(context)),
+      child: Expanded(
+        child: service.audioFileListView(context, service.mySongs),
+      ),
     );
   }
 }

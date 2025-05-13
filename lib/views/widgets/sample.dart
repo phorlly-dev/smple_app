@@ -50,31 +50,31 @@ class Input extends StatelessWidget {
 
 class ImageFile extends StatelessWidget {
   final String image;
-  final double hb, wh;
+  final double w, h;
 
   const ImageFile({
     super.key,
     required this.image,
-    required this.hb,
-    required this.wh,
+    required this.h,
+    required this.w,
   });
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(mq.height * hb),
+      borderRadius: BorderRadius.circular(20),
       child: Card(
         child:
-            image != ''
+            image.isNotEmpty && File(image).existsSync()
                 ? Image.file(
-                  width: mq.height * wh,
                   File(image),
-                  height: mq.height * wh,
+                  width: w,
+                  height: h,
                   fit: BoxFit.cover,
                 )
                 : Container(
-                  width: 60,
-                  height: 60,
+                  width: w,
+                  height: h,
                   color: Colors.grey[300],
                   child: const Icon(Icons.image),
                 ),
@@ -167,5 +167,39 @@ class ActionButtons extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class ImageAsset extends StatelessWidget {
+  final String path;
+  final double w, h;
+  const ImageAsset({super.key, required this.path, this.w = 50, this.h = 50});
+
+  @override
+  Widget build(BuildContext context) {
+    return path.isNotEmpty
+        ? ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image(
+            width: w,
+            height: h,
+            fit: BoxFit.cover,
+            image: AssetImage(path),
+          ),
+        )
+        : Icon(Icons.music_note, size: 100);
+  }
+}
+
+class ImageAssetAvatr extends StatelessWidget {
+  final String path;
+  final double w;
+  const ImageAssetAvatr({super.key, required this.path, this.w = 50});
+
+  @override
+  Widget build(BuildContext context) {
+    return path.isNotEmpty
+        ? CircleAvatar(radius: w / 2, backgroundImage: AssetImage(path))
+        : Icon(Icons.music_note, size: w);
   }
 }

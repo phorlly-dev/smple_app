@@ -58,6 +58,7 @@ dependencies:
   layout_pro:
   shimmer_effect:
   image_picker:
+  file_picker: ^10.1.8 
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -99,6 +100,7 @@ flutter:
     - assets/images/
     - assets/svgs/
     - assets/icons/
+    - assets/audios/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

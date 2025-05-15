@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:smple_app/common/general.dart';
 import 'package:smple_app/core/models/audio_file.dart';
 import 'package:smple_app/core/services/audio_file_service.dart';
-import 'package:smple_app/views/widgets/topbar.dart';
+import 'package:smple_app/views/forms/audio_form.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 
 class SongPlayer extends StatefulWidget {
   final AudioFile audioFile;
@@ -120,7 +120,7 @@ class _SongPlayerState extends State<SongPlayer> {
                     icon: const Icon(Icons.add),
                     onPressed: () {
                       // Implement "Add New" functionality (e.g., upload song)
-                      service.showForm(context, null);
+                      AudioForm.showForm(context, null);
                     },
                     tooltip: "Add New",
                   ),

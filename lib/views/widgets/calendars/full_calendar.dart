@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/common/event_data_source.dart';
-import 'package:smple_app/common/global.dart';
-import 'package:smple_app/views/widgets/topbar.dart';
+import 'package:smple_app/core/functions/index.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:smple_app/core/models/event.dart';
 
@@ -46,8 +46,8 @@ class FullCalendar extends StatelessWidget {
                       ),
                       content: Text(
                         event.description!.isEmpty
-                            ? 'Date Time: ${Global.dateTimeFormat(event.date)}'
-                            : 'Date Time: ${Global.dateTimeFormat(event.date)} \n Details: ${event.description}',
+                            ? 'Date Time: ${Funcs.dateTimeFormat(event.date)}'
+                            : 'Date Time: ${Funcs.dateTimeFormat(event.date)} \n Details: ${event.description}',
                         textAlign: TextAlign.center,
                       ),
                       actions: [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smple_app/core/services/audio_file_service.dart';
-import 'package:smple_app/views/widgets/album_group.dart';
-import 'package:smple_app/views/widgets/playlist_group.dart';
-import 'package:smple_app/views/widgets/song.dart';
-import 'package:smple_app/views/widgets/tabbar.dart';
+import 'package:smple_app/views/widgets/audios/album_group.dart';
+import 'package:smple_app/views/widgets/audios/playlist_group.dart';
+import 'package:smple_app/views/widgets/audios/song.dart';
+import 'package:smple_app/views/widgets/app/tabbar.dart';
 
 class MusicPlayer extends StatefulWidget {
   const MusicPlayer({super.key});

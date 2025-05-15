@@ -3,18 +3,15 @@ import 'package:flutter/material.dart';
 class NavLink {
   static go({
     required BuildContext context,
-    required dynamic screen,
+    required Widget screen,
     bool replace = false,
   }) {
     replace
         ? Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => screen),
+          MaterialPageRoute(builder: (_) => screen),
         )
-        : Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => screen),
-        );
+        : Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
   }
 
   static next(BuildContext context, {required Widget widget}) {

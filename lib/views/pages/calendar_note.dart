@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/views/widgets/topbar.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 
 class CalendarNote extends StatelessWidget {
   const CalendarNote({super.key});

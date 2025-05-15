@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smple_app/common/general.dart';
+import 'package:smple_app/views/forms/index.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 
 class WeightCalculator extends StatefulWidget {
   const WeightCalculator({super.key});
@@ -86,20 +87,20 @@ class _WeightCalculatorState extends State<WeightCalculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildInputField(
+                  Controls.input(
                     width: 160,
-                    controller: _ageController,
+                    field: _ageController,
                     label: 'Age',
-                    keyboardType: TextInputType.number,
+                    type: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                   const SizedBox(width: 10),
-                  _buildInputField(
+                  Controls.input(
                     width: 160,
                     label: 'Height (cm)',
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    controller: _heightController,
-                    keyboardType: TextInputType.number,
+                    field: _heightController,
+                    type: TextInputType.number,
                   ),
                 ],
               ),
@@ -107,11 +108,21 @@ class _WeightCalculatorState extends State<WeightCalculator> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildGenderSwitcher(),
-                  _buildInputField(
-                    controller: _weightController,
+                  // _buildGenderSwitcher(),
+                  Controls.switcher(
+                    onTap: (index) {
+                      setState(() {
+                        _gender = index;
+                        _calculateBMI();
+                      });
+                    },
+                    value: _gender,
+                    listIcons: _genderIcons,
+                  ),
+                  Controls.input(
+                    field: _weightController,
                     label: 'Weight (kg)',
-                    keyboardType: TextInputType.number,
+                    type: TextInputType.number,
                   ),
                 ],
               ),
@@ -195,59 +206,6 @@ class _WeightCalculatorState extends State<WeightCalculator> {
         ),
         title: 'Weight Calculator',
       ),
-    );
-  }
-
-  Widget _buildInputField({
-    required TextEditingController controller,
-    required String label,
-    required TextInputType keyboardType,
-    double? height = 50,
-    double? width = 200,
-    List<TextInputFormatter>? inputFormatters,
-  }) {
-    return SizedBox(
-      height: height,
-      width: width,
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          labelText: label,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenderSwitcher() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(2, (index) {
-        return InkWell(
-          onTap: () {
-            setState(() {
-              _gender = index;
-              _calculateBMI();
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _gender == index ? Colors.blue : Colors.grey[300],
-              ),
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                _genderIcons[index],
-                color: _gender == index ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-        );
-      }),
     );
   }
 }

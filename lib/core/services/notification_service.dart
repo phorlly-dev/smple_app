@@ -1,5 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:smple_app/common/global.dart';
+import 'package:smple_app/core/functions/index.dart';
 
 class NotificationService {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -46,11 +46,11 @@ class NotificationService {
       android: androidNotificationDetails,
     );
 
-    if (Global.isSameMinute(scheduledTime.toLocal(), DateTime.now())) {
+    if (Funcs.isSameMinute(scheduledTime.toLocal(), DateTime.now())) {
       await flutterLocalNotificationsPlugin.show(
         id.hashCode,
         title,
-        'Scheduled: ${Global.dateTimeFormat(scheduledTime)}',
+        'Scheduled: ${Funcs.dateTimeFormat(scheduledTime)}',
         notificationDetails,
         payload: 'item x',
       );

@@ -46,6 +46,7 @@ class _TabbarState extends State<Tabbar> with SingleTickerProviderStateMixin {
       length: widget.tabs.length,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 1,
           centerTitle: true,
           title: Text(widget.title),
           bottom:

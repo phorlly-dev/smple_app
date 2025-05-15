@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smple_app/main.dart';
 
@@ -10,6 +11,7 @@ class Input extends StatelessWidget {
   final void Function(String?)? saved;
   final String? Function(String?)? checked, changed;
   final TextInputType? type;
+  final double? width, height;
 
   const Input({
     super.key,
@@ -21,26 +23,32 @@ class Input extends StatelessWidget {
     this.checked,
     this.changed,
     this.type,
+    this.width = 300,
+    this.height = 60,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
-      child: TextFormField(
-        controller: name,
-        onSaved: saved,
-        validator: checked,
-        keyboardType: type,
-        maxLines: null,
-        onChanged: changed,
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.blue),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-          hintText: hint,
-          label: Text(
-            label,
-            style: const TextStyle(color: Colors.blueAccent, fontSize: 16),
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: TextFormField(
+          controller: name,
+          onSaved: saved,
+          validator: checked,
+          keyboardType: type,
+          maxLines: null,
+          onChanged: changed,
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: Colors.blue),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+            hintText: hint,
+            label: Text(
+              label,
+              style: const TextStyle(color: Colors.blueAccent, fontSize: 16),
+            ),
           ),
         ),
       ),
@@ -201,5 +209,40 @@ class ImageAssetAvatr extends StatelessWidget {
     return path.isNotEmpty
         ? CircleAvatar(radius: w / 2, backgroundImage: AssetImage(path))
         : Icon(Icons.music_note, size: w);
+  }
+}
+
+class TimerSelector extends StatelessWidget {
+  final String label;
+  final int count, selected;
+  final ValueChanged<int> onChanged;
+
+  const TimerSelector({
+    super.key,
+    required this.label,
+    required this.count,
+    required this.selected,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 100,
+          width: 80,
+          child: CupertinoPicker(
+            scrollController: FixedExtentScrollController(
+              initialItem: selected,
+            ),
+            itemExtent: 32,
+            onSelectedItemChanged: onChanged,
+            children: List.generate(count, (i) => Center(child: Text('$i'))),
+          ),
+        ),
+        Padding(padding: const EdgeInsets.all(8.0), child: Text(label)),
+      ],
+    );
   }
 }

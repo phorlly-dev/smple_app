@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/common/global.dart';
+import 'package:smple_app/core/dialogs/index.dart';
 import 'package:smple_app/core/models/user.dart';
 import 'package:smple_app/core/services/service.dart';
-import 'package:smple_app/views/forms/sample_form.dart';
-import 'package:smple_app/views/widgets/sample.dart';
+import 'package:smple_app/views/forms/user_form.dart';
+import 'package:smple_app/views/widgets/generals/sample.dart';
 
 class UserService {
   // Add a new
-  Future<void> store(User object) async {
+  static Future<void> store(User object) async {
     await Service.create<User>(
       model: object,
       collectionName: 'users',
@@ -16,7 +16,7 @@ class UserService {
   }
 
   // Update an existing
-  Future<void> update(User object) async {
+  static Future<void> update(User object) async {
     // Update the user in Firestore
     await Service.update(
       collectionName: 'users',
@@ -39,7 +39,7 @@ class UserService {
   // }
 
   // Stream builder for reusable widget
-  liveStream(BuildContext context) {
+  stream(BuildContext context) {
     return Service.streamBuilder<User>(
       collectionName: 'users',
       fromMap: (data, docId) => User.fromMap(data, docId),
@@ -57,7 +57,7 @@ class UserService {
               ),
               trailing: ActionButtons(
                 pressedOnDelete: () {
-                  Global.confirmDelete(
+                  Popup.confirmDelete(
                     context,
                     message: object.name,
                     confirmed: () {
@@ -72,64 +72,12 @@ class UserService {
                   );
                 },
                 pressedOnEdit: () {
-                  showForm(context, object);
+                  UserForm.showForm(context, object);
                 },
               ),
             );
           },
         );
-      },
-    );
-  }
-
-  // Function to show the form dialog for adding/editing a user
-  void showForm(BuildContext context, User? item) {
-    FormBuilder.showForm(
-      context,
-      title: 'User',
-      item: item?.toMap(), // or pass item for editing
-      listInputs: [
-        {
-          'label': 'Full Name',
-          'name': 'name',
-          'hint': 'Enter your full name',
-          'type': TextInputType.name,
-          'icon': Icons.person,
-        },
-        {
-          'label': 'Email',
-          'name': 'email',
-          'hint': 'Enter your email',
-          'type': TextInputType.emailAddress,
-          'icon': Icons.email,
-        },
-        {
-          'label': 'Phone Number',
-          'name': 'phone',
-          'hint': 'Enter phone number',
-          'type': TextInputType.phone,
-          'icon': Icons.phone,
-        },
-      ],
-      submit: (object) async {
-        // log('object: $object');
-        item!.id.isEmpty
-            ? await store(
-              User(
-                id: '',
-                name: object['name'],
-                email: object['email'],
-                phone: object['phone'],
-              ),
-            )
-            : await update(
-              User(
-                id: item.id,
-                name: object['name'],
-                email: object['email'],
-                phone: object['phone'],
-              ),
-            );
       },
     );
   }

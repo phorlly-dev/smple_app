@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/common/global.dart';
-import 'package:smple_app/views/widgets/sample.dart';
+import 'package:smple_app/core/functions/index.dart';
+import 'package:smple_app/core/messages/index.dart';
+import 'package:smple_app/views/widgets/generals/sample.dart';
 
 class FormBuilder {
   static void showForm(
@@ -31,7 +32,7 @@ class FormBuilder {
             textAlign: TextAlign.center,
           ),
           content: Form(
-            key: Global.formKey,
+            key: Funcs.formKey,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -64,7 +65,7 @@ class FormBuilder {
             Center(
               child: Button(
                 click: () {
-                  if (Global.formKey.currentState!.validate()) {
+                  if (Funcs.formKey.currentState!.validate()) {
                     final newData = <String, dynamic>{};
 
                     // Extract values from all controllers
@@ -74,14 +75,14 @@ class FormBuilder {
 
                     if (item == null) {
                       // If item is null, it's an add operation
-                      Global.message(
+                      Msg.message(
                         context,
                         message: 'Created successfully!',
                         bgColor: Colors.blue,
                       );
                     } else {
                       // If item is not null, it's an edit operation
-                      Global.message(
+                      Msg.message(
                         context,
                         message: 'Updated successfully!',
                         bgColor: Colors.green,

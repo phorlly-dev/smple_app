@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/common/nav_link.dart';
+import 'package:smple_app/core/links/nav_link.dart';
 import 'package:smple_app/core/services/event_service.dart';
-import 'package:smple_app/views/widgets/full_calendar.dart';
-import 'package:smple_app/views/widgets/topbar.dart';
+import 'package:smple_app/views/forms/even_form.dart';
+import 'package:smple_app/views/widgets/calendars/full_calendar.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 
 class SimpleCalendar extends StatefulWidget {
   const SimpleCalendar({super.key});
@@ -12,7 +13,7 @@ class SimpleCalendar extends StatefulWidget {
 }
 
 class _SimpleCalendarState extends State<SimpleCalendar> {
-  final _eventService = EventService();
+  final service = EventService();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class _SimpleCalendarState extends State<SimpleCalendar> {
                 'Events',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Expanded(child: _eventService.liveStream(context)),
+              Expanded(child: service.stream(context)),
             ],
           ),
         ),
@@ -38,7 +39,7 @@ class _SimpleCalendarState extends State<SimpleCalendar> {
           children: [
             FloatingActionButton(
               heroTag: 'add_event',
-              onPressed: () => _eventService.showForm(context, null),
+              onPressed: () => EvenForm.showForm(context, null),
               tooltip: 'Add Event',
               child: const Icon(Icons.add),
             ),
@@ -46,7 +47,7 @@ class _SimpleCalendarState extends State<SimpleCalendar> {
             FloatingActionButton(
               heroTag: 'view_calendar',
               onPressed: () async {
-                final events = await _eventService.index();
+                final events = await service.index();
                 if (context.mounted) {
                   NavLink.next(context, widget: FullCalendar(events: events));
                 }

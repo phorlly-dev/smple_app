@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/common/general.dart';
 import 'package:smple_app/core/services/user_service.dart';
+import 'package:smple_app/views/forms/user_form.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 
 class UserPage extends StatefulWidget {
   final String title;
@@ -27,13 +28,13 @@ class _UserPageState extends State<UserPage> {
                 'Users',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Expanded(child: _userService.liveStream(context)),
+              Expanded(child: _userService.stream(context)),
             ],
           ),
         ),
         button: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () => _userService.showForm(context, null),
+          onPressed: () => UserForm.showForm(context, null),
         ),
       ),
     );

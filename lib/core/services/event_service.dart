@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/common/global.dart';
+import 'package:smple_app/core/dialogs/index.dart';
+import 'package:smple_app/core/functions/index.dart';
 import 'package:smple_app/core/models/event.dart';
 import 'package:smple_app/core/services/notification_service.dart';
 import 'package:smple_app/core/services/service.dart';
-import 'package:smple_app/views/widgets/sample.dart';
+import 'package:smple_app/views/forms/even_form.dart';
+import 'package:smple_app/views/widgets/generals/sample.dart';
 
 class EventService {
   final notification = NotificationService();
 
   // Add a new event
-  Future<void> store(Event object) async {
+  static Future<void> store(Event object) async {
     await Service.create<Event>(
       model: object,
       collectionName: 'events',
@@ -18,7 +20,7 @@ class EventService {
   }
 
   // Update an existing data
-  Future<void> update(Event object) async {
+  static Future<void> update(Event object) async {
     // Update the data in Firestore
     await Service.update(
       collectionName: 'events',
@@ -44,7 +46,7 @@ class EventService {
   }
 
   //Stream builder for reuseable widget
-  liveStream(BuildContext context) {
+  stream(BuildContext context) {
     return Service.streamBuilder<Event>(
       collectionName: 'events',
       fromMap: (data, docId) => Event.fromMap(data, docId),
@@ -57,12 +59,12 @@ class EventService {
             return ListTile(
               title: Text(item.title),
               subtitle: Text(
-                '${Global.dateTimeFormat(item.date)}\n ${item.description ?? ''}',
+                '${Funcs.dateTimeFormat(item.date)}\n ${item.description ?? ''}',
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               trailing: ActionButtons(
                 pressedOnDelete: () {
-                  Global.confirmDelete(
+                  Popup.confirmDelete(
                     context,
                     message: item.title,
                     confirmed: () {
@@ -77,117 +79,10 @@ class EventService {
                   );
                 },
                 pressedOnEdit: () {
-                  showForm(context, item);
+                  EvenForm.showForm(context, item);
                 },
               ),
             );
-          },
-        );
-      },
-    );
-  }
-
-  // Function to show the form dialog for adding/editing a user
-  void showForm(BuildContext context, Event? item) {
-    final title = TextEditingController(text: item?.title ?? '');
-    final description = TextEditingController(text: item?.description ?? '');
-    DateTime selectedDate = item?.date ?? DateTime.now();
-
-    // Show the dialog
-    Global.showModal(
-      context: context,
-      builder: (context, setState) {
-        return Global.form(
-          model: item,
-          context,
-          title: 'Event',
-          children: [
-            TextField(
-              controller: title,
-              decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            Global.showDateTimePicker(
-              context,
-              label: 'Datetime',
-              selected: selectedDate,
-              changed: (value) => setState(() => selectedDate = value),
-            ),
-            TextField(
-              maxLines: null,
-              minLines: 1,
-              keyboardType: TextInputType.multiline,
-              controller: description,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                helperMaxLines: 5,
-              ),
-            ),
-          ],
-
-          // Save button
-          onSave: () async {
-            if (title.text.isEmpty) {
-              Global.message(
-                context,
-                message: 'Please enter a title',
-                bgColor: Colors.red,
-              );
-              return;
-            } else {
-              final event = Event(
-                title: title.text,
-                date: selectedDate,
-                description: description.text,
-                id: '',
-              );
-              await store(event);
-
-              // Schedule the notification
-              // NotificationService.scheduleNotification(
-              //   id: event.title.hashCode,
-              //   title: event.title,
-              //   body: event.description ?? '',
-              //   scheduledDate: event.date,
-              // );
-
-              title.clear();
-              description.clear();
-
-              if (context.mounted) {
-                Navigator.pop(context);
-                Global.message(context, message: 'Created successfully!');
-              }
-            }
-          },
-
-          // Update button
-          onUpdate: () async {
-            if (title.text.isEmpty) {
-              Global.message(
-                context,
-                message: 'Please enter a title',
-                bgColor: Colors.red,
-              );
-              return;
-            } else {
-              await update(
-                Event(
-                  id: item!.id, // assuming Event has an id field
-                  title: title.text,
-                  date: selectedDate,
-                  description: description.text,
-                ),
-              );
-
-              if (context.mounted) {
-                Navigator.pop(context);
-                Global.message(
-                  context,
-                  message: 'Updated successfully!',
-                  bgColor: Colors.green,
-                );
-              }
-            }
           },
         );
       },

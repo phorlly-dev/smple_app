@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smple_app/common/general.dart';
 import 'package:smple_app/core/services/meeting_service.dart';
+import 'package:smple_app/views/forms/meeting_form.dart';
+import 'package:smple_app/views/widgets/app/topbar.dart';
 
 class CalendarViewPage extends StatefulWidget {
   const CalendarViewPage({super.key});
@@ -10,16 +11,14 @@ class CalendarViewPage extends StatefulWidget {
 }
 
 class _CalendarViewPageState extends State<CalendarViewPage> {
-  final _service = MeetingService();
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Topbar(
         title: 'Full Calendar',
-        content: _service.liveStream(context),
+        content: MeetingService.stream(context),
         button: FloatingActionButton(
-          onPressed: () => _service.showForm(context, model: null),
+          onPressed: () => MeetingForm.showForm(context, model: null),
           child: const Icon(Icons.add),
         ),
       ),

@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:smple_app/core/links/nav_link.dart';
+import 'package:smple_app/core/functions/index.dart';
 import 'package:smple_app/core/models/timer_item.dart';
 import 'package:smple_app/core/services/timer_servce.dart';
 import 'package:smple_app/views/widgets/app/topbar.dart';
-import 'package:smple_app/views/widgets/generals/sample.dart';
-import 'package:smple_app/views/widgets/generals/timer_card.dart';
-import 'package:smple_app/views/widgets/timers/timer_view.dart';
 
 class TimerCountdown extends StatefulWidget {
   final String title;
@@ -70,6 +67,14 @@ class _TimerCountdownState extends State<TimerCountdown> {
         });
       }
     });
+  }
+
+  String format(int totalSeconds) {
+    final h = totalSeconds ~/ 3600;
+    final m = (totalSeconds % 3600) ~/ 60;
+    final s = totalSeconds % 60;
+    return "${h > 0 ? '${Funcs.numToStr(h)}:' : ''}${Funcs.numToStr(m)}:${Funcs.numToStr(s)}";
+    // return "${h > 0 ? '$h:' : ''}${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -147,51 +152,74 @@ class _TimerCountdownState extends State<TimerCountdown> {
         title: "Timer",
         content: Column(
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: activeTimers.length,
-              itemBuilder: (context, index) {
-                final timer = activeTimers[index];
+            Card(
+              margin: EdgeInsets.all(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(editableTitle, style: TextStyle(fontSize: 24)),
+                    SizedBox(height: 10),
+                    Text(format(remainingTime), style: TextStyle(fontSize: 32)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(onPressed: () {}, icon: Icon(Icons.stop)),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   itemCount: activeTimers.length,
+            //   itemBuilder: (context, index) {
+            //     final timer = activeTimers[index];
 
-                return TimerCard(
-                  timer: timer,
-                  onPause: () {
-                    setState(() => timer.isPaused = !timer.isPaused);
-                  },
-                  onStop: () async {
-                    timer.countdown?.cancel();
-                    setState(() => activeTimers.removeAt(index));
-                    await service.store(
-                      TimerItem(
-                        id: timer.id,
-                        title: timer.title,
-                        duration: timer.totalTime,
-                        startTime: DateTime.now(),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 30),
-            Button(
-              label: 'Add another timer',
-              click: () {
-                NavLink.go(
-                  context: context,
-                  screen: TimerView(
-                    onTimerCreated: (value) {
-                      setState(() {
-                        activeTimers.add(value);
-                      });
-                    },
-                  ),
-                );
-              },
-              icon: Icons.add,
-              color: Colors.lightBlueAccent,
-              width: 200,
-            ),
+            // return TimerCard(
+            //   timer: timer,
+            //   onPause: () {
+            //     setState(() => timer.isPaused = !timer.isPaused);
+            //   },
+            //   onStop: () async {
+            //     timer.countdown?.cancel();
+            //     setState(() => activeTimers.removeAt(index));
+            //     await service.store(
+            //       TimerItem(
+            //         id: timer.id,
+            //         title: timer.title,
+            //         duration: timer.totalTime,
+            //         startTime: DateTime.now(),
+            //       ),
+            //     );
+            //   },
+            // ),
+            //   },
+            // ),
+            // const SizedBox(height: 30),
+            // Button(
+            //   label: 'Add another timer',
+            //   click: () {
+            //     NavLink.go(
+            //       context: context,
+            //       screen: TimerView(
+            //         onTimerCreated: (value) {
+            //           setState(() {
+            //             activeTimers.add(value);
+            //           });
+            //         },
+            //       ),
+            //     );
+            //   },
+            //   icon: Icons.add,
+            //   color: Colors.lightBlueAccent,
+            //   width: 200,
+            // ),
           ],
         ),
       ),

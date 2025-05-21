@@ -5,7 +5,7 @@ import 'package:smple_app/core/services/service.dart';
 import 'package:smple_app/views/forms/user_form.dart';
 import 'package:smple_app/views/widgets/generals/sample.dart';
 
-class UserService {
+class UserService extends Service {
   // Add a new
   static Future<void> store(User object) async {
     await Service.create<User>(

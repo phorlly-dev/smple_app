@@ -2,7 +2,7 @@ name: smple_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -34,9 +34,35 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  uuid: ^4.5.1
+  uuid: # Add UUID package for unique IDs
+  firebase_core:
+  cloud_firestore:
+  firebase_messaging:
+  intl:
+  syncfusion_flutter_calendar:
+  just_audio:
+  rxdart:
+  flutter_local_notifications: ^19.1.0
+  timezone: ^0.10.0
+  shared_preferences:
+  bloc:
+  flutter_bloc:
+  equatable:
+  google_fonts:
+  flutter_svg:
+  sqflite:
+  path_provider:
+  path:
+  permission_handler:
+  # on_audio_query:
+  layout_pro:
+  shimmer_effect:
+  image_picker:
+  file_picker: ^10.1.8 
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.10
   flutter_test:
     sdk: flutter
 
@@ -49,18 +75,32 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/logo.png"
+
+# flutter_native_splash:
+#   color: "#ffffff"
+#   image: assets/splash/logo.png
+#   android: true
+#   ios: true
+#   web: true
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    # - images/
+    - assets/images/
+    - assets/svgs/
+    - assets/icons/
+    - assets/audios/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
